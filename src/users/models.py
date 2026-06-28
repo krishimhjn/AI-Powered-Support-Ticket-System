@@ -1,7 +1,7 @@
 from datetime import datetime
-
+from sqlalchemy.orm import relationship
 from sqlalchemy import Column, DateTime, Integer, String
-
+from datetime import datetime, UTC
 from src.utils.db import Base
 
 
@@ -18,4 +18,12 @@ class User(Base):
 
     role = Column(String(20), nullable=False, default="customer")
 
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(
+    DateTime,
+    default=lambda: datetime.now(UTC)
+)
+tickets = relationship(
+    "Ticket",
+    back_populates="customer",
+    cascade="all, delete-orphan"
+)

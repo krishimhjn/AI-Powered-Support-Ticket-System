@@ -1,7 +1,8 @@
 from fastapi import FastAPI
-
+from src.tickets.router import router as ticket_router
 from src.utils.db import Base, engine
 from src.users.models import User
+from src.tickets.models import Ticket
 from src.users.router import router as user_router
 
 # Create all database tables
@@ -13,7 +14,7 @@ app = FastAPI(
 )
 
 app.include_router(user_router)
-
+app.include_router(ticket_router)
 
 @app.get("/")
 def root():
