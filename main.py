@@ -1,9 +1,22 @@
 from fastapi import FastAPI
 
-app=FastAPI(title="Ai-Powered-support-ticket-system")
+from src.utils.db import Base, engine
+from src.users.models import User
+from src.users.router import router as user_router
+
+# Create all database tables
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI(
+    title="AI Support Ticket System",
+    version="1.0.0"
+)
+
+app.include_router(user_router)
 
 
-@app.get("/home")
+@app.get("/")
 def root():
-    return {"Hello":"Welcome to Ai-Powered-support-ticket-system"}
-
+    return {
+        "message": "AI Support Ticket System API"
+    }
