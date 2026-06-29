@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from src.users.auth import get_current_user,get_current_customer,get_current_agent
 from src.users.models import User
 
-from src.users.controller import login_user, register_user
+from src.users.controller import login_user, register_user,get_all_users
 from src.users.schemas import (
     Token,
     UserLogin,
@@ -39,3 +39,8 @@ def login(
     db: Session = Depends(get_db)
 ):
     return login_user(db, user)
+
+
+@router.get("/get_all_user")
+def getall(db:Session=Depends(get_db)):
+    return get_all_users(db)

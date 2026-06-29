@@ -65,3 +65,23 @@ def update_ticket_status(
     db.refresh(ticket)
 
     return ticket
+
+def get_ticket_by_id(
+    db: Session,
+    ticket_id: int
+):
+    ticket = (
+        db.query(Ticket)
+        .filter(Ticket.id == ticket_id)
+        .first()
+    )
+
+    if not ticket:
+        raise HTTPException(
+            status_code=404,
+            detail="Ticket not found."
+        )
+
+    return ticket
+
+

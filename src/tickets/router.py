@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends,HTTPException
 from sqlalchemy.orm import Session
 
-from src.tickets.controller import create_ticket,get_my_tickets,get_all_tickets,update_ticket_status
+from src.tickets.controller import create_ticket,get_my_tickets,get_all_tickets,update_ticket_status,get_ticket_by_id
 from src.tickets.schemas import TicketCreate, TicketResponse,TicketUpdate
-from src.users.auth import get_current_customer,get_current_agent
+from src.users.auth import get_current_customer,get_current_agent,get_current_user
 from src.users.models import User
 from src.utils.db import get_db
 
@@ -59,3 +59,29 @@ def update_ticket_status_endpoint(
         ticket_id=ticket_id,
         ticket_update=ticket_update
     )
+
+@router.get(
+    "/{ticket_id}",
+    response_model=TicketResponse
+)
+def get_ticket_by_id_endpoint(
+    ticket_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    ticket = get_ticket_by_id(
+        db=db,
+        ticket_id=ticket_id
+    )
+
+    # Customer can only view their own ticket
+    if (
+        current_user.role == "customer"
+        and ticket.customer_id != current_user.id
+    ):
+        raise HTTPException(
+            status_code=403,
+            detail="Access denied."
+        )
+
+    return ticket

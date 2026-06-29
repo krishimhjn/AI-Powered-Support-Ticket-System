@@ -76,3 +76,9 @@ def login_user(db: Session, user: UserLogin):
         "access_token": access_token,
         "token_type": "bearer"
     }
+
+
+
+def get_all_users(db:Session):
+    all_users=db.query(User).all()
+    return all_users
