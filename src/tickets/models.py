@@ -12,7 +12,7 @@ class Ticket(Base):
     title = Column(String(255), nullable=False)
 
     description = Column(Text, nullable=False)
-
+    summary = Column(Text)
     status = Column(
         String(50),
         default="Open",

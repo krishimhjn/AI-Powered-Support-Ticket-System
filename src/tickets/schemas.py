@@ -22,6 +22,7 @@ class TicketResponse(BaseModel):
     customer_id: int
     created_at: datetime
     updated_at: datetime
+    summary:str | None=None
 
     model_config = ConfigDict(
         from_attributes=True

@@ -3,16 +3,22 @@ from fastapi import HTTPException
 from src.tickets.models import Ticket
 from src.tickets.schemas import TicketCreate,TicketUpdate
 from src.users.models import User
-
+from src.ai.service import analyze_ticket
 
 def create_ticket(
     db: Session,
     ticket: TicketCreate,
     current_user: User
 ):
+    # Analyze the ticket using AI
+    analysis = analyze_ticket(ticket.description)
+
     new_ticket = Ticket(
         title=ticket.title,
         description=ticket.description,
+        category=analysis.category,
+        priority=analysis.priority,
+        summary=analysis.summary,
         customer_id=current_user.id
     )
 
