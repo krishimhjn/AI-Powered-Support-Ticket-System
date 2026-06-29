@@ -10,15 +10,26 @@ def create_ticket(
     ticket: TicketCreate,
     current_user: User
 ):
-    # Analyze the ticket using AI
-    analysis = analyze_ticket(ticket.description)
+    try:
+        analysis = analyze_ticket(ticket.description)
+
+        category = analysis.category
+        priority = analysis.priority
+        summary = analysis.summary
+
+    except Exception as e:
+        print(f"AI Error: {e}")
+
+        category = "General"
+        priority = "Medium"
+        summary = "AI analysis unavailable."
 
     new_ticket = Ticket(
         title=ticket.title,
         description=ticket.description,
-        category=analysis.category,
-        priority=analysis.priority,
-        summary=analysis.summary,
+        category=category,
+        priority=priority,
+        summary=summary,
         customer_id=current_user.id
     )
 
@@ -44,8 +55,6 @@ def get_all_tickets(db: Session):
     )
 
     return tickets
-
-
 
 
 def update_ticket_status(
