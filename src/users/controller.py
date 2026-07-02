@@ -23,10 +23,10 @@ def register_user(db: Session, user: UserRegister):
     hashed_password = hash_password(user.password)
 
     new_user = User(
-        name=user.name,
-        email=user.email,
-        hashed_password=hashed_password
-    )
+    name=user.name,
+    email=user.email,
+    hashed_password=hashed_password
+)
 
     db.add(new_user)
     db.commit()
